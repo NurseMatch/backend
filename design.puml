@@ -1,0 +1,29 @@
+@startuml
+
+class User {
+  - userID: int
+  - username: string
+  - password: string
+}
+
+class Consultant {
+  - nurseID: int
+  - name: string
+  - experienceInYears: int
+}
+
+class Assignment {
+  - assignmentID: int
+  - location: Location
+  - shift: string
+}
+
+class Location {
+  - name: string
+  -
+}
+
+User <|-- Consultant
+Consultant "1" -- "0..*" Assignment : can match
+
+@enduml
