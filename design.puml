@@ -1,29 +1,35 @@
 @startuml
-
 class User {
   - userID: int
   - username: string
-  - password: string
+  - hashedPassword: string
 }
 
 class Consultant {
-  - nurseID: int
+  - consultantId: int
   - name: string
   - experienceInYears: int
+  - hourlySalaryRequirementSek: int
+}
+
+class WorkProfile {
+  - consultant: Consultant
+  - workingLocations: Location[]
+  - currentAssignments: Assignment[]
 }
 
 class Assignment {
   - assignmentID: int
   - location: Location
   - shift: string
+  - hourlySalarySek: int
 }
 
 class Location {
+  - locationID: int
   - name: string
-  -
+  - lon: double
+  - lat: double
+  - municipality: string
 }
-
-User <|-- Consultant
-Consultant "1" -- "0..*" Assignment : can match
-
 @enduml
