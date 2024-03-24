@@ -1,10 +1,9 @@
 package main
 
 import (
-	"context"
-	"database/sql"
 	"fmt"
-	_ "github.com/microsoft/go-mssqldb"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
 	"log"
 	"os"
 )
@@ -14,7 +13,7 @@ const (
 	database = "nurse_match"
 )
 
-func connectToDb() (*sql.DB, error) {
+func connectToDb() (*gorm.DB, error) {
 	// Get environment variables
 	server := os.Getenv("DB_SERVER")
 	user := os.Getenv("DB_USER")
@@ -25,16 +24,21 @@ func connectToDb() (*sql.DB, error) {
 		server, user, password, port, database)
 
 	// Create connection pool
-	db, err := sql.Open("sqlserver", connString)
+	db, err := gorm.Open(sqlserver.Open(connString), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error creating connection pool: ", err.Error())
 	}
 
-	ctx := context.Background()
-	err = db.PingContext(ctx)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	fmt.Printf("Connected!")
 	return db, err
+}
+
+func runMigration(db *gorm.DB) {
+	err := db.AutoMigrate(&User{}, &Consultant{}, &Location{}, &Assignment{}, &WorkProfile{})
+	if err != nil {
+		return
+	}
 }

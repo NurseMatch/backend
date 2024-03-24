@@ -5,10 +5,8 @@ import (
 )
 
 func main() {
-	_, err := connectToDb()
-	if err != nil {
-		return
-	}
+	db, err := connectToDb()
+	runMigration(db)
 	err = setupApi()
 	if err != nil {
 		return
