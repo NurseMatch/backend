@@ -37,7 +37,12 @@ func connectToDb() (*gorm.DB, error) {
 }
 
 func runMigration(db *gorm.DB) {
-	err := db.AutoMigrate(&User{}, &Consultant{}, &Location{}, &Assignment{}, &WorkProfile{})
+	err := db.AutoMigrate(
+		&User{},
+		&Consultant{},
+		&Location{},
+		&Assignment{},
+		&WorkProfile{})
 	if err != nil {
 		return
 	}
