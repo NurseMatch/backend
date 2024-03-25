@@ -22,7 +22,7 @@ jobs:
         with:
           appSourcePath: ${{ github.workspace }}
           acrName: nursematch
-          containerAppName: backendApi
+          containerAppName: dokarecruitmentbackend
           resourceGroup: dev
           targetPort: 8080
         env:
