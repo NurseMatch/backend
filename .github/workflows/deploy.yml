@@ -24,3 +24,4 @@ jobs:
           acrName: nursematch
           containerAppName: dokarecruitmentbackend
           resourceGroup: dev
+          targetPort: 8080
