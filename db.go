@@ -29,9 +29,6 @@ func connectToDb() (*gorm.DB, error) {
 		log.Fatal("Error creating connection pool: ", err.Error())
 	}
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
 	fmt.Printf("Connected!")
 	return db, err
 }
