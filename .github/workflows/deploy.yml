@@ -25,4 +25,6 @@ jobs:
           containerAppName: backendApi
           resourceGroup: dev
           targetPort: 8080
-          environmentVariables: 'secretref:DB_USER=DB_USER secretref:DB_PASSWORD=DB_PASSWORD secretref:DB_SERVER=DB_SERVER'
+          environmentVariables:
+            - name: hejsan
+              value: hejsan
