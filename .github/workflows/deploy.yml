@@ -25,4 +25,4 @@ jobs:
           containerAppName: dokarecruitmentbackend
           resourceGroup: dev
           targetPort: 8080
-          environmentVariables: "DB_USER=secretref:AZURE_CREDENTIALS DB_PASSWORD=secretref:AZURE_CREDENTIALS DB_SERVER=secretref:AZURE_CREDENTIALS"
+          #environmentVariables: "DB_USER=secretref:AZURE_CREDENTIALS DB_PASSWORD=secretref:AZURE_CREDENTIALS DB_SERVER=secretref:AZURE_CREDENTIALS"
