@@ -1,25 +1,28 @@
 package main
 
 import (
+	"backend/controllers"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func main() {
 	db, err := connectToDb()
 	runMigration(db)
-	err = setupApi()
+	err = setupApi(db)
 	if err != nil {
 		return
 	}
 }
 
-func setupApi() error {
+func setupApi(db *gorm.DB) error {
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+	r.Use(func(c *gin.Context) {
+		c.Set("db", db)
+		c.Next()
 	})
+	controllers.RegisterAssignmentEndpoints(r)
+
 	err := r.Run()
 	return err
 }
