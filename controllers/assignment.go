@@ -6,11 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterAssignmentEndpoints(c *gin.Engine) {
-	c.GET("/assignment/:id", getAssignment)
-	c.POST("/assignment", createAssignment)
-	c.PUT("/assignment/:id", updateAssignment)
-	c.DELETE("/assignment/:id", deleteAssignment)
+func RegisterAssignmentEndpoints(e *gin.Engine) {
+	e.GET("/assignment/:id", getAssignment)
+	e.POST("/assignment", createAssignment)
+	e.PUT("/assignment/:id", updateAssignment)
+	e.DELETE("/assignment/:id", deleteAssignment)
 }
 
 func getAssignment(c *gin.Context) {

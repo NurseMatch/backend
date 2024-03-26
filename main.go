@@ -16,14 +16,14 @@ func main() {
 }
 
 func setupApi(db *gorm.DB) error {
-	r := gin.Default()
-	r.Use(func(c *gin.Context) {
+	c := gin.Default()
+	c.Use(func(c *gin.Context) {
 		c.Set("db", db)
 		c.Next()
 	})
 
-	controllers.RegisterAssignmentEndpoints(r)
+	controllers.RegisterAssignmentEndpoints(c)
 
-	err := r.Run()
+	err := c.Run()
 	return err
 }
