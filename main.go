@@ -17,6 +17,7 @@ func main() {
 
 func setupApi(db *gorm.DB) error {
 	c := gin.Default()
+
 	c.Use(func(c *gin.Context) {
 		c.Set("db", db)
 		c.Next()
