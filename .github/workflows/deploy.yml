@@ -22,10 +22,10 @@ jobs:
         with:
           appSourcePath: ${{ github.workspace }}
           acrName: nursematch
-          containerAppName: backendApi
+          containerAppName: dokarecruitmentbackend
           resourceGroup: dev
           targetPort: 8080
-          environmentVariables: >
-            DB_USER=secretref:DB_USER
-            DB_PASSWORD=secretref:DB_PASSWORD
-            DB_SERVER=secretref:DB_SERVER
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SERVER: ${{ secrets.DB_SERVER }}
