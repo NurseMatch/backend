@@ -45,7 +45,7 @@ func createAssignment(c *gin.Context) {
 		c.JSON(500, result.Error)
 	}
 
-	c.JSON(201, assignment)
+	c.JSON(201, assignment.ID)
 }
 
 func updateAssignment(c *gin.Context) {
@@ -73,7 +73,7 @@ func updateAssignment(c *gin.Context) {
 		c.JSON(500, result.Error)
 	}
 
-	c.JSON(200, assignment)
+	c.JSON(200, assignment.ID)
 }
 
 func deleteAssignment(c *gin.Context) {
