@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/data"
 	"fmt"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
@@ -35,11 +36,11 @@ func connectToDb() (*gorm.DB, error) {
 
 func runMigration(db *gorm.DB) {
 	err := db.AutoMigrate(
-		&User{},
-		&Consultant{},
-		&Location{},
-		&Assignment{},
-		&WorkProfile{})
+		&data.User{},
+		&data.Consultant{},
+		&data.Location{},
+		&data.Assignment{},
+		&data.WorkProfile{})
 	if err != nil {
 		return
 	}
