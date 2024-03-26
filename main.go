@@ -21,6 +21,7 @@ func setupApi(db *gorm.DB) error {
 		c.Set("db", db)
 		c.Next()
 	})
+	
 	controllers.RegisterAssignmentEndpoints(r)
 
 	err := r.Run()
