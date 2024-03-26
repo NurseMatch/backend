@@ -67,7 +67,6 @@ func updateAssignment(c *gin.Context) {
 		return
 	}
 
-
 	result := db.Save(&assignment)
 
 	if result.Error != nil {
