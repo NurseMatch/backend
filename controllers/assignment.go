@@ -8,6 +8,7 @@ import (
 
 func RegisterAssignmentEndpoints(e *gin.Engine) {
 	e.GET("/assignment/:id", getAssignment)
+	e.GET("/assignments", getAssignments)
 	e.POST("/assignment", createAssignment)
 	e.PUT("/assignment/:id", updateAssignment)
 	e.DELETE("/assignment/:id", deleteAssignment)
@@ -26,6 +27,20 @@ func getAssignment(c *gin.Context) {
 	}
 
 	c.JSON(200, assignment)
+}
+
+func getAssignments(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var assignments []data.Assignment
+	if err := db.Find(&assignments).Error; err != nil {
+		c.JSON(404, gin.H{
+			"error": "No assignments found",
+		})
+		return
+	}
+
+	c.JSON(200, assignments)
 }
 
 func createAssignment(c *gin.Context) {
