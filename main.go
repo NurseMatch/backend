@@ -32,26 +32,44 @@ func setupApi(db *gorm.DB) error {
 	// Create a new Gin router with default middleware
 	r := gin.Default()
 
+	r.Use(CORSMiddleware())
 	// Middleware to inject the database instance into the Gin context
 	r.Use(func(c *gin.Context) {
 		c.Set("db", db)
 		c.Next()
 	})
 
+	r.Use(jwtMiddleware())
+
 	controllers.RegisterAccountEndpoints(r)
 	controllers.RegisterAssignmentEndpoints(r)
-	r.Use(jwtMiddleware())
 
 	// Run the Gin server
 	err := r.Run(":8080")
 	return err
 }
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept,X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func jwtMiddleware() gin.HandlerFunc {
 	jwtSecret := []byte(os.Getenv("JWTSECRET"))
 
 	return func(c *gin.Context) {
-		if c.Request.URL.Path == "/account" {
+		if c.Request.URL.Path[:8] == "/account" {
 			c.Next()
 			return
 		}
