@@ -4,10 +4,20 @@ import (
 	"backend/controllers"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"os"
 )
 
 func main() {
-	db, err := connectToDb()
+	local := os.Getenv("LOCALDB") == "true"
+
+	var db *gorm.DB
+	var err error
+
+	if local {
+		db, err = connectToLocalDb()
+	} else {
+		db, err = connectToDb()
+	}
 	runMigration(db)
 	err = setupApi(db)
 	if err != nil {
@@ -24,6 +34,7 @@ func setupApi(db *gorm.DB) error {
 	})
 
 	controllers.RegisterAssignmentEndpoints(c)
+	controllers.RegisterAccountEndpoints(c)
 
 	err := c.Run()
 	return err
