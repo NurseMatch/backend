@@ -3,14 +3,17 @@ package controllers
 import (
 	"backend/data"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/http"
+	"os"
+	"time"
 )
 
 func RegisterAccountEndpoints(e *gin.Engine) {
-	e.POST("/createUser", createUser)
-	e.POST("/login", login)
+	e.POST("/account/createUser", createUser)
+	e.POST("/account/login", login)
 }
 
 func createUser(c *gin.Context) {
@@ -58,31 +61,46 @@ func login(c *gin.Context) {
 
 	var user data.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Bad Request",
-		})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request"})
 		return
 	}
+
 	var unHashedPassword = user.HashedPassword
 
+	// Find the user by username
 	if err := db.Where(&data.User{Username: user.Username}).First(&user).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid username or password",
-		})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
 
+	// Compare hashed password
 	if err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(unHashedPassword)); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid username or password",
-		})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful",
-		"user_id": user.ID,
-	})
+	// Generate JWT token
+	token, err := createToken(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	// Set token as a cookie
+	c.SetCookie("token", token, 3600, "/", "", false, true)
+
+	// Respond with success message
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "user_id": user.ID})
+}
+
+func createToken(userID uint) (string, error) {
+	jwtSecret := []byte(os.Getenv("JWTSECRET"))
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["user_id"] = userID
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix() // Token expires in 24 hours
+
+	return token.SignedString(jwtSecret)
 }
 
 func HashPassword(password string) (string, error) {
