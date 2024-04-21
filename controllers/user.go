@@ -14,6 +14,7 @@ import (
 func RegisterAccountEndpoints(e *gin.Engine) {
 	e.POST("/account/createUser", createUser)
 	e.POST("/account/login", login)
+	e.POST("/account/logout", logout)
 }
 
 func createUser(c *gin.Context) {
@@ -75,15 +76,22 @@ func login(c *gin.Context) {
 		return
 	}
 
-	token, err := createToken(user.ID)
+	_, err := createToken(user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
 	}
 
-	c.SetCookie("token", token, 3600, "/", "", false, true)
+	c.SetCookie("token", "token", 3600, "/", ".localhost", true, true)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "user_id": user.ID})
+}
+
+func logout(c *gin.Context) {
+
+	c.SetCookie("token", "", -1, "/", ".localhost", true, true)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
 }
 
 func createToken(userID uint) (string, error) {
