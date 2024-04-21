@@ -3,6 +3,7 @@ package main
 import (
 	"backend/data"
 	"fmt"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"log"
@@ -13,6 +14,15 @@ const (
 	port     = 1433
 	database = "nurse_match"
 )
+
+func connectToLocalDb() (*gorm.DB, error) {
+	dsn := "host=localhost user=user1234 password=user1234 dbname=localdb port=5432 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
 
 func connectToDb() (*gorm.DB, error) {
 	// Get environment variables
