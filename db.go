@@ -50,7 +50,8 @@ func runMigration(db *gorm.DB) {
 		&data.Consultant{},
 		&data.Location{},
 		&data.Assignment{},
-		&data.WorkProfile{})
+		&data.WorkProfile{},
+		&data.Workplace{})
 	if err != nil {
 		return
 	}
