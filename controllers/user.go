@@ -76,13 +76,13 @@ func login(c *gin.Context) {
 		return
 	}
 
-	_, err := createToken(user.ID)
+	token, err := createToken(user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
 	}
 
-	c.SetCookie("token", "token", 3600, "/", ".localhost", true, true)
+	c.SetCookie("token", token, 3600, "/", ".localhost", true, true)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "user_id": user.ID})
 }
