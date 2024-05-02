@@ -42,8 +42,6 @@ func setupApi(db *gorm.DB) error {
 	r.Use(jwtMiddleware())
 
 	controllers.RegisterAccountEndpoints(r)
-	controllers.RegisterAssignmentEndpoints(r)
-	controllers.RegisterWorkplaceEndpoints(r)
 
 	// Run the Gin server
 	err := r.Run(":8080")
