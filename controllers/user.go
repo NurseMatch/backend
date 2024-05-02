@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"backend/data"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"net/http"
-	"os"
-	"time"
 )
 
 func RegisterAccountEndpoints(e *gin.Engine) {
