@@ -36,7 +36,8 @@ func createConsultant(c *gin.Context) {
 	var consultantView views.Consultant
 	if err := c.ShouldBindJSON(&consultantView); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Bad Request",
+			"error":   "Bad Request",
+			"message": err.Error(),
 		})
 		return
 	}
@@ -50,23 +51,24 @@ func createConsultant(c *gin.Context) {
 	}
 
 	newConsultant := data.Consultant{
-		Name:              consultantView.Name,
-		ExperienceInYears: consultantView.Experience,
-		Education:         consultantView.Education,
-		Role:              consultantView.Role,
-		Email:             consultantView.Email,
-		Phone:             consultantView.Phone,
-		ProfileImage:      consultantView.ProfileImage,
-		JobPreferences:    consultantView.JobPreferences,
-		HourlyRate:        consultantView.HourlyRate,
-		Description:       consultantView.Description,
-		Location:          consultantView.Location,
-		IDImage:           consultantView.IDImage,
+		Name:           consultantView.Name,
+		WorkExperience: mapWorkExperience(consultantView.WorkExperience),
+		Education:      consultantView.Education,
+		Role:           consultantView.Role,
+		Email:          consultantView.Email,
+		Phone:          consultantView.Phone,
+		ProfileImage:   consultantView.ProfileImage,
+		JobPreferences: consultantView.JobPreferences,
+		HourlyRate:     consultantView.HourlyRate,
+		Description:    consultantView.Description,
+		Location:       consultantView.Location,
+		IDImage:        consultantView.IDImage,
 	}
 
 	if err := db.Create(&newConsultant).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to create user",
+			"error":   "Failed to create user",
+			"message": err.Error(),
 		})
 		return
 	}
@@ -81,14 +83,6 @@ func updateConsultant(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	consultantID := c.Param("id")
 
-	var consultant data.Consultant
-	if err := db.First(&consultant, consultantID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Consultant not found",
-		})
-		return
-	}
-
 	var updatedConsultant views.Consultant
 	if err := c.ShouldBindJSON(&updatedConsultant); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -97,8 +91,16 @@ func updateConsultant(c *gin.Context) {
 		return
 	}
 
+	var consultant data.Consultant
+	if err := db.First(&consultant, consultantID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Consultant not found",
+		})
+		return
+	}
+
 	consultant.Name = updatedConsultant.Name
-	consultant.ExperienceInYears = updatedConsultant.Experience
+	consultant.WorkExperience = mapWorkExperience(updatedConsultant.WorkExperience)
 	consultant.Education = updatedConsultant.Education
 	consultant.Role = updatedConsultant.Role
 	consultant.Email = updatedConsultant.Email
@@ -144,4 +146,13 @@ func deleteConsultant(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Consultant deleted successfully",
 	})
+}
+
+func mapWorkExperience(experience views.WorkExperience) data.WorkExperience {
+	return data.WorkExperience{
+		Title:       experience.Title,
+		Description: experience.Description,
+		StartDate:   experience.StartDate,
+		EndDate:     experience.EndDate,
+	}
 }
