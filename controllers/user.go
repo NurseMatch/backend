@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/data"
 	"backend/views"
 	"net/http"
 	"os"
