@@ -48,8 +48,6 @@ func setupApi(db *gorm.DB) error {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Register your API endpoints
 	controllers.RegisterAccountEndpoints(r)
-	controllers.RegisterAssignmentEndpoints(r)
-	controllers.RegisterWorkplaceEndpoints(r)
 	// Run the Gin server
 	err := r.Run(":8080")
 	return err

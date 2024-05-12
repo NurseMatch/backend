@@ -1,11 +1,6 @@
-package data
-
-import (
-	"gorm.io/gorm"
-)
+package views
 
 type Consultant struct {
-	gorm.Model
 	Name                       string
 	ExperienceInYears          int
 	HourlySalaryRequirementSek int
