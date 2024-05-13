@@ -20,14 +20,29 @@ func getConsultant(c *gin.Context) {
 	consultantID := c.Param("id")
 
 	var consultant data.Consultant
-	if err := db.First(&consultant, consultantID).Error; err != nil {
+	if err := db.Joins("left join work_experiences on work_experiences.id = consultants.id").First(&consultant, consultantID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Consultant not found",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, consultant)
+	consultantView := views.Consultant{
+		Name:           consultant.Name,
+		WorkExperience: mapWorkExperienceView(consultant.WorkExperience),
+		Education:      consultant.Education,
+		Role:           consultant.Role,
+		Email:          consultant.Email,
+		Phone:          consultant.Phone,
+		ProfileImage:   consultant.ProfileImage,
+		JobPreferences: consultant.JobPreferences,
+		HourlyRate:     consultant.HourlyRate,
+		Description:    consultant.Description,
+		Location:       consultant.Location,
+		IDImage:        consultant.IDImage,
+	}
+
+	c.JSON(http.StatusOK, consultantView)
 }
 
 func createConsultant(c *gin.Context) {
@@ -146,6 +161,15 @@ func deleteConsultant(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Consultant deleted successfully",
 	})
+}
+
+func mapWorkExperienceView(experience data.WorkExperience) views.WorkExperience {
+	return views.WorkExperience{
+		Title:       experience.Title,
+		Description: experience.Description,
+		StartDate:   experience.StartDate,
+		EndDate:     experience.EndDate,
+	}
 }
 
 func mapWorkExperience(experience views.WorkExperience) data.WorkExperience {
