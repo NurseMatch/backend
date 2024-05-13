@@ -57,8 +57,8 @@ func createConsultant(c *gin.Context) {
 		return
 	}
 
-	var existingUser data.User
-	if err := db.Where("email = ?", consultantView.Email).First(&existingUser).Error; err == nil {
+	var existingConsultant data.Consultant
+	if err := db.Where("email = ?", consultantView.Email).First(&existingConsultant).Error; err == nil {
 		c.JSON(http.StatusConflict, gin.H{
 			"error": "Email already exists",
 		})
@@ -82,7 +82,7 @@ func createConsultant(c *gin.Context) {
 
 	if err := db.Create(&newConsultant).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":   "Failed to create user",
+			"error":   "Failed to create consultant",
 			"message": err.Error(),
 		})
 		return
