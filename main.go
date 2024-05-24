@@ -49,6 +49,7 @@ func setupApi(db *gorm.DB) error {
 	// Register your API endpoints
 	controllers.RegisterAccountEndpoints(r)
 	controllers.RegisterConsultantEndpoints(r)
+	controllers.RegisterWorkExperienceEndpoints(r)
 	// Run the Gin server
 	err := r.Run(":8080")
 	return err
