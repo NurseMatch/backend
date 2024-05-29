@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Consultant struct {
+type Worker struct {
 	gorm.Model
 	Name           string
 	WorkExperience WorkExperience `gorm:"foreignKey:ID"`

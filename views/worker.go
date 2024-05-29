@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Consultant struct {
+type Worker struct {
 	Name           string         `json:"name"`
 	WorkExperience WorkExperience `json:"workExperience"`
 	Education      string         `json:"education"`
