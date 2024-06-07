@@ -46,6 +46,7 @@ func setupApi(db *gorm.DB) error {
 	controllers.RegisterAccountEndpoints(r)
 	controllers.RegisterWorkerEndpoints(r)
 	controllers.RegisterAssignmentEndpoints(r)
+	controllers.RegisterFileEndpoints(r)
 	// Run the Gin server
 	err := r.Run(":8080")
 	return err
@@ -69,7 +70,7 @@ func CORSMiddleware() gin.HandlerFunc {
 func jwtMiddleware() gin.HandlerFunc {
 	jwtSecret := []byte(os.Getenv("JWTSECRET"))
 	return func(c *gin.Context) {
-		if c.Request.URL.Path[:8] == "/account" || c.Request.URL.Path[:8] == "/swagger" {
+		if len(c.Request.URL.Path) > 7 && (c.Request.URL.Path[:8] == "/account" || c.Request.URL.Path[:8] == "/swagger") {
 			c.Next()
 			return
 		}
