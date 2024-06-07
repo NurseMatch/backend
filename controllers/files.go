@@ -7,6 +7,7 @@ import (
 
 func RegisterFileEndpoints(e *gin.Engine) {
 	e.POST("/files", uploadFiles)
+	e.GET("/files/:fileName", getFile)
 }
 
 func uploadFiles(c *gin.Context) {
@@ -24,4 +25,10 @@ func uploadFiles(c *gin.Context) {
 		"files uploaded": len(files),
 		"message":        "Files uploaded successfully",
 	})
+}
+
+func getFile(c *gin.Context) {
+	fileName := c.Param("fileName")
+
+	c.File("./tmp/" + fileName)
 }
