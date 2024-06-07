@@ -35,20 +35,18 @@ func main() {
 	}
 }
 func setupApi(db *gorm.DB) error {
-	// Create a new Gin router with default middleware
 	r := gin.Default()
 	r.Use(CORSMiddleware())
-	// Middleware to inject the database instance into the Gin context
 	r.Use(func(c *gin.Context) {
 		c.Set("db", db)
 		c.Next()
 	})
 	r.Use(jwtMiddleware())
-	// Swagger endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	// Register your API endpoints
 	controllers.RegisterAccountEndpoints(r)
-	controllers.RegisterConsultantEndpoints(r)
+	controllers.RegisterWorkerEndpoints(r)
+	controllers.RegisterAssignmentEndpoints(r)
+	controllers.RegisterFileEndpoints(r)
 	// Run the Gin server
 	err := r.Run(":8080")
 	return err
@@ -69,11 +67,10 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
-// jwtMiddleware is a middleware to handle JWT authentication
 func jwtMiddleware() gin.HandlerFunc {
 	jwtSecret := []byte(os.Getenv("JWTSECRET"))
 	return func(c *gin.Context) {
-		if c.Request.URL.Path[:8] == "/account" || c.Request.URL.Path[:8] == "/swagger" {
+		if len(c.Request.URL.Path) > 7 && (c.Request.URL.Path[:8] == "/account" || c.Request.URL.Path[:8] == "/swagger") {
 			c.Next()
 			return
 		}
