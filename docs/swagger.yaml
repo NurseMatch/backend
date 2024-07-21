@@ -1,4 +1,6 @@
 info:
+  version: "1.0"
+  title: "NurseMatch"
   contact: {}
 paths: {}
 swagger: "2.0"
